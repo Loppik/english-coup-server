@@ -9,7 +9,7 @@ class UserWords extends Model {
   }
 
   static get idColumn() {
-    return 'word_id'
+    return 'user_id'
   }
 }
 
