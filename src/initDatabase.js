@@ -1,5 +1,6 @@
 const { Client } = require('pg');
 const config = require('./configs/db');
+const statusTypes = require('./configs/statusTypes');
 
 const client = new Client({
   user: config.user,
@@ -9,13 +10,38 @@ const client = new Client({
 })
 client.connect()
 
-exports.initDatabaseTables = () => {
+const initDatabaseTables = () => {
   try {
     client.query("CREATE TABLE IF NOT EXISTS users ( user_id INT PRIMARY KEY, email VARCHAR(30), password VARCHAR(20) )");
-    client.query("CREATE TABLE IF NOT EXISTS status ( status_id INT PRIMARY KEY, name VARCHAR(30) )");
+    client.query("CREATE TABLE IF NOT EXISTS status ( status_id SERIAL PRIMARY KEY, name VARCHAR(30) )");
     client.query("CREATE TABLE IF NOT EXISTS userWords ( user_id INT PRIMARY KEY, word_id INT, status_id INT )");
     client.query("CREATE TABLE IF NOT EXISTS words ( word_id SERIAL PRIMARY KEY, original VARCHAR(50), translation VARCHAR(50), custom BOOLEAN )");
   } catch(err) {
-    console.log(err);
+    console.log(err); // FIXME: best error handler in the world
   }
+}
+
+const initStatusTableData = async () => {
+  try {
+    const isTableExist = (await client.query("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'status')")).rows[0].exists;
+    if (isTableExist) {
+      const isTableEmpty = (await client.query("SELECT * FROM status")).rows.length === 0;
+      if (isTableEmpty) {
+        const statusNames = statusTypes.types.reduce((prev, statusName) => `${prev} ('${statusName}'),`, '');
+        client.query("INSERT INTO status (name) VALUES " + statusNames.slice(0, statusNames.length - 1));
+      }
+    }
+  } catch (err) {
+    console.log(err); // FIXME: best error handler in the world
+  }
+}
+
+const initTablesData = async () => {
+  await initStatusTableData();
+}
+
+module.exports = {
+  initDatabaseTables,
+  initStatusTableData,
+  initTablesData
 }
