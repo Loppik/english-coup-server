@@ -1,6 +1,6 @@
 const app = require('express')();
-const translation = require('./translation');
 
-app.use('/translation', translation);
+app.use('/translation', require('./translation'));
+app.use('/userword', require('./userWord'))
 
 module.exports = app;
