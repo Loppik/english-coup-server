@@ -5,11 +5,11 @@ Model.knex(knex);
 
 class UserWords extends Model {
   static get tableName() {
-    return 'userWords';
+    return 'userwords';
   }
 
   static get idColumn() {
-    return 'user_id'
+    return 'id';
   }
 }
 
