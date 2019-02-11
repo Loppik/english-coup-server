@@ -27,3 +27,26 @@ exports.addUserWord = async (user_id, word) => {
     return userWordRequest.addUserWord(user_id, word_id);
   }
 }
+
+const getRandomInt = max => {
+  return Math.floor(Math.random()*max);
+}
+
+exports.getPortionLearningWords = async user_id => {
+  let allLearningWords = await userWordRequest.getLearningWords(user_id);
+  const count = 5; // FIXME: go to user settings and see this parametr
+  const portionLearningWordsId = [];
+  for (let i = 0; i < count; i++) {
+    const randIndex = getRandomInt(allLearningWords.length);
+    const word = allLearningWords[randIndex];
+    allLearningWords.splice(randIndex, 1);
+    portionLearningWordsId.push(word.word_id)
+  }
+  const portionLearningWords = [];
+  for(const word_id of portionLearningWordsId) {
+    const word = await wordRequest.getWordById(word_id);
+    word.watched = false;
+    portionLearningWords.push(word);
+  }
+  return portionLearningWords;
+}
