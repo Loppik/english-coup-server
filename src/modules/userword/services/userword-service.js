@@ -1,4 +1,4 @@
-const userWordRequest = require('../db/userWord-db');
+const userWordRequest = require('../db/userword-db');
 const wordRequest = require('../../word/db/word-db');
 
 // FIXME: check situation when user already have this word for learning
@@ -35,18 +35,22 @@ const getRandomInt = max => {
 exports.getPortionLearningWords = async user_id => {
   let allLearningWords = await userWordRequest.getLearningWords(user_id);
   const count = 5; // FIXME: go to user settings and see this parametr
-  const portionLearningWordsId = [];
-  for (let i = 0; i < count; i++) {
-    const randIndex = getRandomInt(allLearningWords.length);
-    const word = allLearningWords[randIndex];
-    allLearningWords.splice(randIndex, 1);
-    portionLearningWordsId.push(word.word_id)
+  if (allLearningWords.length === count) return allLearningWords;
+  if (allLearningWords.length > count) {
+    const portionLearningWordsId = [];
+    for (let i = 0; i < count; i++) {
+      const randIndex = getRandomInt(allLearningWords.length);
+      const word = allLearningWords[randIndex];
+      allLearningWords.splice(randIndex, 1);
+      portionLearningWordsId.push(word.word_id)
+    }
+    const portionLearningWords = [];
+    for(const word_id of portionLearningWordsId) {
+      const word = await wordRequest.getWordById(word_id);
+      word.watched = false;
+      portionLearningWords.push(word);
+    }
+    return portionLearningWords;
   }
-  const portionLearningWords = [];
-  for(const word_id of portionLearningWordsId) {
-    const word = await wordRequest.getWordById(word_id);
-    word.watched = false;
-    portionLearningWords.push(word);
-  }
-  return portionLearningWords;
+  return [];
 }

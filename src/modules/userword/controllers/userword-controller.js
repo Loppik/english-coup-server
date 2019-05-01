@@ -1,4 +1,4 @@
-const userWordService = require('../services/userWord-service');
+const userWordService = require('../services/userword-service');
 
 exports.addUserWord = async (req, res) => {
   try {
