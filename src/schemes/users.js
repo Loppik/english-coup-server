@@ -1,4 +1,4 @@
-const knex = require('../knex1');
+const knex = require('../knex');
 const { Model } = require('objection');
 
 Model.knex(knex);

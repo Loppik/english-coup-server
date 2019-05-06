@@ -12,7 +12,7 @@ client.connect()
 
 const initDatabaseTables = () => {
   try {
-    client.query("CREATE TABLE IF NOT EXISTS users ( user_id INT PRIMARY KEY, email VARCHAR(30), password VARCHAR(20) )");
+    client.query("CREATE TABLE IF NOT EXISTS users ( user_id SERIAL PRIMARY KEY, email VARCHAR(30), password VARCHAR(200), refresh_token VARCHAR(200) )");
     client.query("CREATE TABLE IF NOT EXISTS status ( status_id SERIAL PRIMARY KEY, name VARCHAR(30) )");
     client.query("CREATE TABLE IF NOT EXISTS userwords ( id SERIAL PRIMARY KEY, user_id INT, word_id INT, status_id INT )");
     client.query("CREATE TABLE IF NOT EXISTS words ( word_id SERIAL PRIMARY KEY, original VARCHAR(50), translation VARCHAR(50), custom BOOLEAN )");

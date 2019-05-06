@@ -1,6 +1,10 @@
 module.exports = {
-  types: ['learning', 'learned'],
-  default: {
+  LEARNING: {
     status_id: 1,
+    name: 'learning',
+  },
+  LEARNED: {
+    status_id: 2,
+    name: 'learned',
   },
 }

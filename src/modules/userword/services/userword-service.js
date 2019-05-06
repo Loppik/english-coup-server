@@ -32,25 +32,50 @@ const getRandomInt = max => {
   return Math.floor(Math.random()*max);
 }
 
+const getPortionWordsFromUserwords = async (userwords, needWordsCount) => {
+  const portionWords = [];
+  for (let i = 0; i < count; i++) {
+    const randIndex = getRandomInt(userwords.length);
+    const userword = userwords[randIndex];
+    userwords.splice(randIndex, 1);
+    const word = await wordRequest.getWordById(userword.word_id)
+    word.watched = false;
+    portionWords.push(word);
+  }
+  return portionWords;
+}
+
+const fromUserwordsToWords = async (userwords) => {
+  let r = [];
+  for(let i = 0; i < userwords.length; i++) {
+    const word = await wordRequest.getWordById(userwords[i].word_id)
+    r.push(word);     
+  }
+  return r;
+}
+
 exports.getPortionLearningWords = async user_id => {
   let allLearningWords = await userWordRequest.getLearningWords(user_id);
   const count = 5; // FIXME: go to user settings and see this parametr
-  if (allLearningWords.length === count) return allLearningWords;
-  if (allLearningWords.length > count) {
-    const portionLearningWordsId = [];
-    for (let i = 0; i < count; i++) {
-      const randIndex = getRandomInt(allLearningWords.length);
-      const word = allLearningWords[randIndex];
-      allLearningWords.splice(randIndex, 1);
-      portionLearningWordsId.push(word.word_id)
-    }
-    const portionLearningWords = [];
-    for(const word_id of portionLearningWordsId) {
-      const word = await wordRequest.getWordById(word_id);
-      word.watched = false;
-      portionLearningWords.push(word);
-    }
-    return portionLearningWords;
-  }
+  if (allLearningWords.length === count) return await fromUserwordsToWords(allLearningWords);
+  if (allLearningWords.length > count) return await getPortionWordsFromUserwords(allLearningWords, count);
   return [];
+}
+
+exports.changeStatusToLearned = async (user_id, words) => {
+  for(let i = 0; i < words.length; i++) {
+    await userWordRequest.setLearnedStatus(user_id, words[i].word_id);
+  }
+}
+
+exports.getRepeatWords = async (user_id, filter) => {
+  const count = 5; // FIXME: go to user settings and see this parametr
+  console.log(filter.type)
+  switch (filter.type) {
+    case 'forAllTime':
+      const allLearnedWords = await userWordRequest.getLearnedWords(user_id);
+      if (allLearnedWords.length === count) return await fromUserwordsToWords(allLearnedWords);
+      if (allLearnedWords.length > count) return await getPortionWordsFromUserwords(allLearnedWords, count);
+      return [];
+  }
 }
