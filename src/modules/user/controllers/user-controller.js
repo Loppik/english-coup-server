@@ -8,6 +8,7 @@ exports.getUserById = async (req, res) => {
     delete user.refresh_token;
     res.send(user);
   } catch (err) {
+    console.log(err)
     res.status(500).send({ err });
   }
 };

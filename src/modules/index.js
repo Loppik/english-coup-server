@@ -20,5 +20,6 @@ app.use((req, res, next) => {
 app.use('/translation', require('./translation'));
 app.use('/userwords', require('./userword'));
 app.use('/users', require('./user'));
+app.use('/stat', require('./stat'));
 
 module.exports = app;

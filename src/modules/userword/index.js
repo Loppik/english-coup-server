@@ -8,6 +8,8 @@ router.route('/')
 
 router.route('/repeat')
   .get(userWordController.repeatWordsForAllTime)
+
+router.get('/left', userWordController.countWordsLeft)
 /*
 router.route('/learned')
   .post(userWordController)

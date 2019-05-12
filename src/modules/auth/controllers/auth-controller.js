@@ -9,7 +9,7 @@ exports.registration = async (req, res) => {
     res.send({ msg: 'Successful registration' })
   } catch (err) {
     console.log(err);
-    res.status(500).send({ msg: 'У сервера есть дела поважнее чем Ваша регистрация. Предлагаем Вам скрестить пальцы и попробовать ещё раз' }) // FIXME: real error reason send
+    res.status(500).send({ msg: 'У сервера есть дела поважнее чем Ваша регистрация. Предлагаем Вам скрестить пальцы и попробовать ещё раз / ' + err }) // FIXME: real error reason send
   }
 };
 
