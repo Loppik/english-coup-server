@@ -52,3 +52,12 @@ exports.countWordsLeft = async (req, res) => {
   }
 }
 
+exports.countAllLearnedWords = async (req, res) => {
+  try {
+    const allLearnedWords = await userwordRequest.getLearnedWords(req.body.userId);
+    res.send(allLearnedWords.length + '');
+  } catch (err) {
+    res.status(500).send({ msg: err.message });
+  }
+}
+

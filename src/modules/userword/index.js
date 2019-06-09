@@ -10,6 +10,7 @@ router.route('/repeat')
   .get(userWordController.repeatWordsForAllTime)
 
 router.get('/left', userWordController.countWordsLeft)
+router.get('/learned', userWordController.countAllLearnedWords)
 /*
 router.route('/learned')
   .post(userWordController)
