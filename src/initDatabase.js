@@ -27,7 +27,7 @@ const initStatusTableData = async () => {
     if (isTableExist) {
       const isTableEmpty = (await client.query("SELECT * FROM status")).rows.length === 0;
       if (isTableEmpty) {
-        const statusNames = statusTypes.types.reduce((prev, statusName) => `${prev} ('${statusName}'),`, '');
+        const statusNames = Object.keys(statusTypes).reduce((prev, status) => `${prev} ('${statusTypes[status].name}'),`, '');
         client.query("INSERT INTO status (name) VALUES " + statusNames.slice(0, statusNames.length - 1));
       }
     }
