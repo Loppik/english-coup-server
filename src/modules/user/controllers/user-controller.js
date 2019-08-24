@@ -3,9 +3,9 @@ const userRequest = require('../db/user-db');
 exports.getUserById = async (req, res) => {
   try {
     let user = await userRequest.getUserById(req.body.userId);
-    delete user.user_id;
+    delete user.userId;
     delete user.password;
-    delete user.refresh_token;
+    delete user.refreshToken;
     res.send(user);
   } catch (err) {
     console.log(err)

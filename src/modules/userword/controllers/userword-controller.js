@@ -3,7 +3,7 @@ const userWordService = require('../services/userword-service');
 
 exports.addUserWord = async (req, res) => {
   try {
-    const r = await userWordService.addUserWord({ ...req.body.word, user_id: req.body.userId });
+    const r = await userWordService.addUserWord({ ...req.body.word, userId: req.body.userId });
     res.send({});
   } catch (err) {
     console.log(err);
@@ -23,7 +23,7 @@ exports.getPortionLearningWords = async (req, res) => {
 
 exports.changeStatusToLearned = async (req, res) => {
   try {
-    const userId = req.body.userId; // FIXME: req.body.user_id
+    const userId = req.body.userId; // FIXME: req.body.userId
     delete req.body.userId;
     await userWordService.changeStatusToLearned(userId, req.body);
     res.send([]);

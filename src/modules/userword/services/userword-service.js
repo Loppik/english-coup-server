@@ -6,25 +6,25 @@ exports.addUserWord = async (userword) => {
   if (userword.custom) {
     const words = await wordRequest.getWordByOriginal(userword.original); // FIXME: when translate return to client id of the word, if client don't customize translation then use this id
     const customWord = words.filter((w) => w.translation === userword.translation);
-    let word_id;
+    let wordId;
     if (customWord.length === 0) { // word is custom and it's no in the database
       const w = await wordRequest.addWord({original: userword.original, translation: userword.translation, custom: userword.custom}); // FIXME: replace creating object in separate place
-      word_id = w.word_id;
+      wordId = w.wordId;
     } else { // word is custom and it's in the database
-      word_id = customWord[0].word_id;
+      wordId = customWord[0].wordId;
     }
-    return userWordRequest.addUserWord(userword.user_id, word_id);
+    return userWordRequest.addUserWord(userword.userId, wordId);
   } else {
     const words = await wordRequest.getWordByOriginal(userword.original);
     const w = words.filter((w) => w.custom === false);
-    let word_id;
+    let wordId;
     if (w.length === 0) { // word is not custom and it's not in the database
       const w = await wordRequest.addWord({original: userword.original, translation: userword.translation, custom: userword.custom}); // FIXME: replace creating object in separate place
-      word_id = w.word_id;
+      wordId = w.wordId;
     } else { // word is not custom and it's in the database
-      word_id = w[0].word_id;
+      wordId = w[0].wordId;
     }
-    return userWordRequest.addUserWord(userword.user_id, word_id);
+    return userWordRequest.addUserWord(userword.userId, wordId);
   }
 }
 
@@ -38,7 +38,7 @@ const translatePortionWordsFromUserwords = async (userwords, needWordsCount) => 
     const randIndex = getRandomInt(userwords.length);
     const userword = userwords[randIndex];
     userwords.splice(randIndex, 1);
-    const word = await wordRequest.getWordById(userword.word_id)
+    const word = await wordRequest.getWordById(userword.wordId)
     word.watched = false;
     portionWords.push(word);
   }
@@ -48,30 +48,30 @@ const translatePortionWordsFromUserwords = async (userwords, needWordsCount) => 
 const fromUserwordsToWords = async (userwords) => {
   let r = [];
   for(let i = 0; i < userwords.length; i++) {
-    const word = await wordRequest.getWordById(userwords[i].word_id)
+    const word = await wordRequest.getWordById(userwords[i].wordId)
     r.push(word);     
   }
   return r;
 }
 
-exports.getPortionLearningWords = async user_id => {
-  let allLearningWords = await userWordRequest.getLearningWords(user_id);
+exports.getPortionLearningWords = async userId => {
+  let allLearningWords = await userWordRequest.getLearningWords(userId);
   const count = 5; // FIXME: go to user settings and see this parametr
   if (allLearningWords.length === count) return await fromUserwordsToWords(allLearningWords);
   if (allLearningWords.length > count) return await translatePortionWordsFromUserwords(allLearningWords, count);
   return [];
 }
 
-exports.changeStatusToLearned = async (user_id, words) => {
+exports.changeStatusToLearned = async (userId, words) => {
   for(let i = 0; i < words.length; i++) {
-    await userWordRequest.setLearnedStatus(user_id, words[i].word_id);
+    await userWordRequest.setLearnedStatus(userId, words[i].wordId);
   }
 }
 
-exports.getRepeatWords = async (user_id, filter) => {
+exports.getRepeatWords = async (userId, filter) => {
   const count = 5; // FIXME: go to user settings and see this parametr
   
-  const allLearnedWords = await userWordRequest.getLearnedWords(user_id);
+  const allLearnedWords = await userWordRequest.getLearnedWords(userId);
   if (allLearnedWords.length === count) return await fromUserwordsToWords(allLearnedWords);
   if (allLearnedWords.length > count) return await translatePortionWordsFromUserwords(allLearnedWords, count);
   return [];

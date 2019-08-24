@@ -21,8 +21,8 @@ exports.login = (data) => {
   return loginValidation.isInvalidLoginData(data).then(() => {
     return userRequest.getUserByEmail(data.email).then((user) => user ? (
       bcrypt.compare(data.password, user.password).then((res) => res ? (
-        jwtService.generateAcsRefTokens({ userId: user.user_id }).then(({ accessToken, refreshToken }) => {
-          return tokenRequest.updateRefreshToken(user.user_id, refreshToken).then(res => ({ accessToken, refreshToken }));
+        jwtService.generateAcsRefTokens({ userId: user.userId }).then(({ accessToken, refreshToken }) => {
+          return tokenRequest.updateRefreshToken(user.userId, refreshToken).then(res => ({ accessToken, refreshToken }));
         })
       ) : (
           Promise.reject('Incorrect password')

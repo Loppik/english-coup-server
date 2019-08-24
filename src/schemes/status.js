@@ -3,14 +3,14 @@ const { Model } = require('objection');
 
 Model.knex(knex);
 
-class Status extends Model {
+class Statuses extends Model {
   static get tableName() {
-    return 'status';
+    return 'statuses';
   }
 
   static get idColumn() {
-    return 'status_id'
+    return 'statusId'
   }
 }
 
-module.exports = Status;
+module.exports = Statuses;

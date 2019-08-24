@@ -3,14 +3,14 @@ const { Model } = require('objection');
 
 Model.knex(knex);
 
-class UserWords extends Model {
+class Userwords extends Model {
   static get tableName() {
     return 'userwords';
   }
 
   static get idColumn() {
-    return 'id';
+    return 'userwordId';
   }
 }
 
-module.exports = UserWords;
+module.exports = Userwords;
