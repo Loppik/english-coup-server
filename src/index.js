@@ -16,7 +16,7 @@ const initDatabase = require('./initDatabase');
 initDatabase.initDatabaseTables();
 initDatabase.initTablesData();
 
-app.listen(config.port, () => {
+app.listen(process.env.PORT || config.port, () => {
   console.log(`Server listening on http://${config.host}:${config.port}`)
 })
 
