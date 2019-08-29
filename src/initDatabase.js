@@ -1,5 +1,5 @@
 const { Client } = require('pg');
-const config = require('./configs/db');
+const config = require('./configs/db')[process.env.NODE_ENV || 'develop'];
 const statusTypes = require('./configs/statusTypes');
 
 const client = new Client({
@@ -7,6 +7,7 @@ const client = new Client({
   host: config.host,
   database: config.database,
   password: config.password,
+  ssl: true,
 })
 client.connect()
 
