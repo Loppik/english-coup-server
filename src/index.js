@@ -12,12 +12,10 @@ app.use(cors());
 const route = require('./modules');
 app.use(route);
 
-const initDatabase = require('./initDatabase');
-initDatabase.initDatabaseTables();
-initDatabase.initTablesData();
+require('./initDatabase')();
 
 app.listen(process.env.PORT || config.port, () => {
   console.log(`Server listening on http://${config.host}:${config.port}`)
-})
+});
 
 module.exports = app;
