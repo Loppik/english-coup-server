@@ -1,6 +1,7 @@
 const authService = require('../services/auth-service');
 const jwtService = require('../../jwt/services/jwt-service');
 
+const { HTTP_STATUS_CODES } = require('../../../constants');
 const tokenRequest = require('../../jwt/db/jwt-db');
 
 exports.registration = async (req, res) => {
@@ -9,7 +10,7 @@ exports.registration = async (req, res) => {
     res.send({ msg: 'Successful registration' })
   } catch (err) {
     console.log(err);
-    res.status(500).send({ msg: 'У сервера есть дела поважнее чем Ваша регистрация. Предлагаем Вам скрестить пальцы и попробовать ещё раз / ' + err }) // FIXME: real error reason send
+    res.status(HTTP_STATUS_CODES.AUTH_FAIL).send({ msg: 'У сервера есть дела поважнее чем Ваша регистрация. Предлагаем Вам скрестить пальцы и попробовать ещё раз / ' + err }) // FIXME: real error reason
   }
 };
 
@@ -19,7 +20,7 @@ exports.login = async (req, res) => {
     res.send(tokens);
   } catch (err) {
     console.log(err);
-    res.status(500).send({ msg: err });
+    res.status(HTTP_STATUS_CODES.AUTH_FAIL).send({ msg: err });
   }
 };
 

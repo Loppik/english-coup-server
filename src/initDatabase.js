@@ -1,6 +1,6 @@
 const { Client } = require('pg');
-const { INVALID_CATALOG_NAME_ERROR_CODE } = require('./constants');
-const config = require('./configs/db')[process.env.NODE_ENV || require('./constants').DEVELOPMENT_NODE_ENV];
+const { POSTGRESQL_ERROR_CODES } = require('./constants');
+const config = require('./configs/db')[process.env.NODE_ENV || require('./constants').NODE_ENVS.DEVELOPMENT];
 const statusTypes = require('./configs/statusTypes');
 
 const client = new Client({
@@ -13,7 +13,7 @@ const client = new Client({
 
 client.connect((err) => {
   if (err) {
-    if (err && err.code === INVALID_CATALOG_NAME_ERROR_CODE) {
+    if (err && err.code === POSTGRESQL_ERROR_CODES.INVALID_CATALOG_NAME) {
       // TODO: do something with reconnection when database doesn't exist
     }
   } else {

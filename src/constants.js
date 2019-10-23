@@ -1,7 +1,18 @@
-const constants = {
-  DEVELOPMENT_NODE_ENV: 'development',
-  PRODUCTION_NODE_ENV: 'production',
-  INVALID_CATALOG_NAME_ERROR_CODE: '3D000'
+const NODE_ENVS = {
+  DEVELOPMENT: 'development',
+  PRODUCTION: 'production',
 };
 
-module.exports = constants;
+const POSTGRESQL_ERROR_CODES = {
+  INVALID_CATALOG_NAME: '3D000'
+};
+
+const HTTP_STATUS_CODES = {
+  AUTH_FAIL: 401
+};
+
+module.exports = {
+  NODE_ENVS,
+  POSTGRESQL_ERROR_CODES,
+  HTTP_STATUS_CODES
+};
