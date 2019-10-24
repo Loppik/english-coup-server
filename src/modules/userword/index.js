@@ -1,19 +1,19 @@
 const router = require('express').Router();
-const userWordController = require('./controllers/userword-controller');
+const userwordController = require('./controllers/userword-controller');
 
 router.route('/')
-  .post(userWordController.addUserWord)
-  .get(userWordController.getPortionLearningWords)
-  .put(userWordController.changeStatusToLearned)
+  .post(userwordController.addUserword)
+  .get(userwordController.getPortionLearningWords)
+  .put(userwordController.changeStatusToLearned)
 
 router.route('/repeat')
-  .get(userWordController.repeatWordsForAllTime)
+  .get(userwordController.repeatWordsForAllTime);
 
-router.get('/left', userWordController.countWordsLeft)
-router.get('/learned', userWordController.countAllLearnedWords)
+router.get('/left', userwordController.countWordsLeft);
+router.get('/learned', userwordController.countAllLearnedWords);
 /*
 router.route('/learned')
-  .post(userWordController)
+  .post(userwordController)
 */
 
 module.exports = router;

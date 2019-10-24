@@ -1,9 +1,9 @@
 const userwordRequest = require('../db/userword-db');
-const userWordService = require('../services/userword-service');
+const userwordService = require('../services/userword-service');
 
-exports.addUserWord = async (req, res) => {
+exports.addUserword = async (req, res) => {
   try {
-    const r = await userWordService.addUserWord({ ...req.body.word, userId: req.body.userId });
+    await userwordService.addUserWord({ ...req.body.word, userId: req.body.userId });
     res.send({});
   } catch (err) {
     console.log(err);
@@ -13,7 +13,7 @@ exports.addUserWord = async (req, res) => {
 
 exports.getPortionLearningWords = async (req, res) => {
   try {
-    const portionLearningWords = await userWordService.getPortionLearningWords(req.body.userId);
+    const portionLearningWords = await userwordService.getPortionLearningWords(req.body.userId);
     res.send(portionLearningWords);
   } catch (err) {
     console.log(err);
@@ -25,7 +25,7 @@ exports.changeStatusToLearned = async (req, res) => {
   try {
     const userId = req.body.userId; // FIXME: req.body.userId
     delete req.body.userId;
-    await userWordService.changeStatusToLearned(userId, req.body);
+    await userwordService.changeStatusToLearned(userId, req.body);
     res.send([]);
   } catch (err) {
     console.log(err.message);
@@ -35,7 +35,7 @@ exports.changeStatusToLearned = async (req, res) => {
 
 exports.repeatWordsForAllTime = async (req, res) => {
   try {
-    const portionLearnedWords = await userWordService.getRepeatWords(req.body.userId, req.query);
+    const portionLearnedWords = await userwordService.getRepeatWords(req.body.userId, req.query);
     res.send(portionLearnedWords);
   } catch (err) {
     res.status(500).send({ msg: err.message });

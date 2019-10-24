@@ -1,5 +1,5 @@
-const Word = require('../../../schemes/words');
+const Word = require('../../../schemes/word');
 
-exports.addWord = word => Word.query().insert(word);
-exports.getWordByOriginal = original => Word.query().where('original', original);
-exports.getWordById = wordId => Word.query().where('wordId', wordId).first();
+exports.addWord = word => Word.create(word);
+exports.getWordByOriginal = original => Word.findOne({ where: { original } });
+exports.getWordById = wordId => Word.findOne({ where: { wordId } });

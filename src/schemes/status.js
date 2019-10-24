@@ -1,16 +1,9 @@
-const knex = require('../knex');
-const { Model } = require('objection');
+const sequelize = require('../sequelize');
+const { primaryColumn, notEmptyString } = require("./constants");
 
-Model.knex(knex);
-
-class Statuses extends Model {
-  static get tableName() {
-    return 'statuses';
-  }
-
-  static get idColumn() {
-    return 'statusId'
-  }
-}
+const Statuses = sequelize.define('statuses', {
+  'statusId': primaryColumn(),
+  'name': notEmptyString()
+}, { timestamps: false });
 
 module.exports = Statuses;

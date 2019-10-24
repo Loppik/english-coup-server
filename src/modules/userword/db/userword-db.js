@@ -1,8 +1,12 @@
 const moment = require('module');
-const UserWord = require('../../../schemes/userWords');
-const statusTypes = require('../../../configs/statusTypes');
+const Userword = require('../../../schemes/userword');
+const { statusesInTable } = require('../../../schemes/constants');
 
-exports.addUserWord = (userId, wordId) => UserWord.query().insert({userId, wordId, statusId: statusTypes.LEARNING.statusId});
-exports.getLearningWords = userId => UserWord.query().where('userId', userId).andWhere('statusId', statusTypes.LEARNING.statusId);
-exports.getLearnedWords = userId => UserWord.query().where('userId', userId).andWhere('statusId', statusTypes.LEARNED.statusId);
-exports.setLearnedStatus = (userId, wordId) => UserWord.query().update({statusId: statusTypes.LEARNED.statusId, dateOfLearned: moment.format('DD/MM/YYYY')}).where('userId', userId).andWhere('wordId', wordId);
+exports.addUserword = (userId, wordId) => Userword.create({ userId, wordId, statusId: statusesInTable.LEARNING.statusId });
+exports.getLearningWords = (userId) => Userword.findAll({ where: { userId, statusId: statusesInTable.LEARNING.statusId } });
+exports.getLearnedWords = (userId) => Userword.findAll({ where: { userId, statusId: statusesInTable.LEARNED.statusId } });
+
+exports.setLearnedStatus = (userId, wordId) => Userword.update(
+  { statusId: statusesInTable.LEARNED.statusId, dateOfLearned: moment.format('DD/MM/YYYY') },
+  { where: { userId, wordId } }
+);

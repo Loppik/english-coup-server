@@ -1,5 +1,7 @@
-const User = require('../../../schemes/users');
+const User = require('../../../schemes/user');
+const { getTableEntitiesCount } = require('../../db-helpers');
 
-exports.getUserByEmail = email => User.query().findOne({ email: email });
-exports.getUserById = userId => User.query().findOne({ userId: userId });
-exports.addUser = user => User.query().insert(user);
+exports.getUserByEmail = (email) => User.findOne({ where: {email} });
+exports.getUserById = (userId) => User.findOne({ where: {userId} });
+exports.addUser = (user) => User.create(user);
+exports.getUsersCount = () => getTableEntitiesCount(User);

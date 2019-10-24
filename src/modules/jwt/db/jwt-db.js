@@ -1,4 +1,11 @@
-const User = require('../../../schemes/users');
+const User = require('../../../schemes/user');
 
-exports.updateRefreshToken = (userId, token) => User.query().update({ refreshToken: token }).where('userId', userId);
-exports.getRefreshTokenByUserId = (userId) => User.query().findById(userId).column('refreshToken');
+exports.updateRefreshToken = (userId, token) => User.update(
+  { refreshToken: token },
+  { where: {userId} }
+);
+
+exports.getRefreshTokenByUserId = (userId) => User.findAll({
+  attributes: ['refreshToken'] ,
+  where: {userId}
+});

@@ -12,7 +12,7 @@ app.use(cors());
 const route = require('./modules');
 app.use(route);
 
-require('./initDatabase')();
+require('./database').connectAndInitDatabase();
 
 app.listen(process.env.PORT || config.port, () => {
   console.log(`Server listening on http://${config.host}:${config.port}`)
