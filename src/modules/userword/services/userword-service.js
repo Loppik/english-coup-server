@@ -3,29 +3,26 @@ const wordRequest = require('../../word/db/word-db');
 
 // FIXME: check situation when user already have this word for learning
 exports.addUserWord = async (userword) => {
+  let wordId;
   if (userword.custom) {
-    const words = await wordRequest.getWordByOriginal(userword.original); // FIXME: when translate return to client id of the word, if client don't customize translation then use this id
-    const customWord = words.filter((w) => w.translation === userword.translation);
-    let wordId;
-    if (customWord.length === 0) { // word is custom and it's no in the database
+    const words = await wordRequest.getCustomWordsByOriginal(userword.original); // FIXME: when translate return to client id of the word, if client don't customize translation then use this id
+    const alreadyFitWord = words.filter((w) => w.translation === userword.translation)[0];
+    if (!alreadyFitWord) { // word is custom and it's no in the database
       const w = await wordRequest.addWord({original: userword.original, translation: userword.translation, custom: userword.custom}); // FIXME: replace creating object in separate place
       wordId = w.wordId;
     } else { // word is custom and it's in the database
-      wordId = customWord[0].wordId;
+      wordId = alreadyFitWord[0].wordId;
     }
-    return userwordRequest.addUserWord(userword.userId, wordId);
   } else {
-    const words = await wordRequest.getWordByOriginal(userword.original);
-    const w = words.filter((w) => w.custom === false);
-    let wordId;
-    if (w.length === 0) { // word is not custom and it's not in the database
-      const w = await wordRequest.addWord({original: userword.original, translation: userword.translation, custom: userword.custom}); // FIXME: replace creating object in separate place
-      wordId = w.wordId;
+    const words = await wordRequest.getNotCustomWordsByOriginal(userword.original);
+    if (words.length === 0) { // word is not custom and it's not in the database
+      const insertedWord = await wordRequest.addWord({original: userword.original, translation: userword.translation, custom: userword.custom}); // FIXME: replace creating object in separate place
+      wordId = insertedWord.wordId;
     } else { // word is not custom and it's in the database
-      wordId = w[0].wordId;
+      wordId = words[0].wordId;
     }
-    return userwordRequest.addUserWord(userword.userId, wordId);
   }
+  return userwordRequest.addUserword(userword.userId, wordId);
 };
 
 const getRandomInt = max => {
