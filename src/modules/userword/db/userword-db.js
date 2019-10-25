@@ -1,4 +1,4 @@
-const moment = require('module');
+const moment = require('moment');
 const Userword = require('../../../schemes/userword');
 const { statusesInTable } = require('../../../schemes/constants');
 
@@ -7,6 +7,6 @@ exports.getLearningWords = (userId) => Userword.findAll({ where: { userId, statu
 exports.getLearnedWords = (userId) => Userword.findAll({ where: { userId, statusId: statusesInTable.LEARNED.statusId } });
 
 exports.setLearnedStatus = (userId, wordId) => Userword.update(
-  { statusId: statusesInTable.LEARNED.statusId, dateOfLearned: moment.format('DD/MM/YYYY') },
+  { statusId: statusesInTable.LEARNED.statusId, dateOfLearned: moment().format('YYYY-MM-DD') },
   { where: { userId, wordId } }
 );
