@@ -20,6 +20,8 @@ const primaryColumn = {
 };
 module.exports.primaryColumn = () => copyObject(primaryColumn);
 
+// Default database data
+
 module.exports.adminUserData = {
   email: 'admin@gmail.com',
   password: '$2b$10$4CDqULkT8jAJEscII1egxu0Hkta9TlzJxDIufO.bK.aapDkq76D7K' // 123
@@ -35,4 +37,6 @@ module.exports.statusesInTable = {
     name: 'learned',
   },
 };
+
+module.exports.defaultExercisesNames = ['Упражнение 1', 'Упражнение 2', 'Упражнение 3'];
 

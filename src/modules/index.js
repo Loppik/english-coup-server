@@ -21,5 +21,6 @@ app.use('/translation', require('./translation'));
 app.use('/userwords', require('./userword'));
 app.use('/users', require('./user'));
 app.use('/stat', require('./stat'));
+app.use('/exercises', require('./exercise'));
 
 module.exports = app;

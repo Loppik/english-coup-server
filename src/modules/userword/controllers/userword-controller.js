@@ -23,7 +23,7 @@ exports.getPortionLearningWords = async (req, res) => {
 
 exports.changeStatusToLearned = async (req, res) => {
   try {
-    const userId = req.body.userId; // FIXME: req.body.userId
+    const userId = req.body.userId;
     delete req.body.userId;
     await userwordService.changeStatusToLearned(userId, req.body);
     res.send([]);

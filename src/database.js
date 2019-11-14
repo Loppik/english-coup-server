@@ -1,7 +1,8 @@
 const sequelize = require('./sequelize');
 const statusRequest = require('./modules/status/db/status-db');
 const userRequest = require('./modules/user/db/user-db');
-const { adminUserData, statusesInTable } = require('./schemes/constants');
+const exerciseRequest = require('./modules/exercise/db/exercise-db');
+const { adminUserData, statusesInTable, defaultExercisesNames } = require('./schemes/constants');
 const { POSTGRESQL_ERROR_CODES } = require('./constants');
 const { newError, DATABASE_ERRORS } = require('./errors');
 
@@ -60,9 +61,20 @@ const initUsersTableData = async () => {
   }
 };
 
+const isEmptyExercisesTable = async () => await exerciseRequest.getExerciseCount() === 0;
+const initExerciseTable = async () => {
+  try {
+    const createExercisesPromises = defaultExercisesNames.map((exerciseName) => exerciseRequest.addExercise({ name: exerciseName }));
+    await Promise.all(createExercisesPromises);
+  } catch(error) {
+    console.error(error); // FIXME: best error handler in the world
+  }
+};
+
 const initTablesData = async () => {
   if (await isEmptyStatusesTable()) await initStatusesTableData();
   if (await isEmptyUsersTable()) await initUsersTableData();
+  if (await isEmptyExercisesTable()) await initExerciseTable();
 };
 
 module.exports = {
