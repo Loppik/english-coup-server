@@ -1,5 +1,6 @@
 const userwordRequest = require('../db/userword-db');
 const wordRequest = require('../../word/db/word-db');
+const { getRandomInt, shuffleArray } = require('../../helpers');
 
 // FIXME: check situation when user already have this word for learning
 exports.addUserWord = async (userword) => {
@@ -25,10 +26,6 @@ exports.addUserWord = async (userword) => {
   return userwordRequest.addUserword(userword.userId, wordId);
 };
 
-const getRandomInt = max => {
-  return Math.floor(Math.random()*max);
-};
-
 const translatePortionWordsFromUserwords = async (userwords, needWordsCount) => {
   const portionWords = [];
   for (let i = 0; i < needWordsCount; i++) {
@@ -46,17 +43,25 @@ const fromUserwordsToWords = async (userwords) => {
   let r = [];
   for(let i = 0; i < userwords.length; i++) {
     const word = await wordRequest.getWordById(userwords[i].wordId)
-    r.push(word);     
+    r.push(word);
   }
   return r;
 };
 
+const getWords = async (userwords, count) => {
+  if (userwords.length === count) {
+    const words = await fromUserwordsToWords(userwords);
+    return shuffleArray(words);
+  }
+  if (userwords.length > count) return await translatePortionWordsFromUserwords(userwords, count);
+  return [];
+};
+
 exports.getPortionLearningWords = async userId => {
   let allLearningWords = await userwordRequest.getLearningWords(userId);
-  const count = 5; // FIXME: go to user settings and see this parametr
-  if (allLearningWords.length === count) return await fromUserwordsToWords(allLearningWords);
-  if (allLearningWords.length > count) return await translatePortionWordsFromUserwords(allLearningWords, count);
-  return [];
+  const count = 5; // FIXME: go to user settings and see this parameter
+
+  return await getWords(allLearningWords, count);
 };
 
 exports.changeStatusToLearned = async (userId, words) => {
@@ -66,10 +71,8 @@ exports.changeStatusToLearned = async (userId, words) => {
 };
 
 exports.getRepeatWords = async (userId, filter) => {
-  const count = 5; // FIXME: go to user settings and see this parametr
-  
   const allLearnedWords = await userwordRequest.getLearnedWords(userId);
-  if (allLearnedWords.length === count) return await fromUserwordsToWords(allLearnedWords);
-  if (allLearnedWords.length > count) return await translatePortionWordsFromUserwords(allLearnedWords, count);
-  return [];
+  const count = 5; // FIXME: go to user settings and see this parametr
+
+  return await getWords(allLearnedWords, count);
 };
